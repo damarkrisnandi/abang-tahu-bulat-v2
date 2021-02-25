@@ -5,7 +5,7 @@ const axios = require('axios');
 const bot = new Discord.Client();
 bot.on("ready", async () => {
     console.log('---ready---');
-    bot.user.setActivity("bang help");
+    bot.user.setActivity("Nothing | bang help");
     console.log(
         'Started/Updated at ', new Date()
     );
@@ -44,7 +44,8 @@ async function command(message) {
         require('./commands/reaction'),
         require('./commands/help'),
         require('./commands/kbbi'),
-        require('./commands/battlefield')
+        require('./commands/battlefield'),
+        require('./commands/random')
     ];
 
     // run the commands here
