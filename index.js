@@ -56,7 +56,7 @@ async function command(message) {
         commands().map(item => item.name) && 
         commands()[commands().map(item => item.name).indexOf(cmmd)]
     ) {
-        if (status.isMainternance && message.author.id != config.authorID && message.author.id != config.botID ) {
+        if (status.isMaintenance && message.author.id != config.authorID && message.author.id != config.botID ) {
             message.channel.send(generateTextEmbed('MAS BAMBANG', 'Sedang maintenis, kamu bukan author'));
             return;
         }
