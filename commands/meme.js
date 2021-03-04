@@ -1,11 +1,12 @@
-const axios = require('axios');
+const { getMeme } = require("../utils/service");
+
 module.exports = {
     name: 'meme',
     description: 'Get a random meme',
     isWithArgs: false,
     type: 'image',
     content: async () => {
-        const data = (await axios.get('https://meme-api.herokuapp.com/gimme')).data
+        const data = await getMeme();
         return data;
     }
 }

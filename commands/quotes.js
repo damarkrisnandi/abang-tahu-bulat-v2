@@ -1,4 +1,4 @@
-const axios = require('axios');
+const { getQuotes0, getQuotes1, getQuotes2, getQuotes3, getQuotes4 } = require('../utils/service');
 module.exports = {
     name: 'quote',
     description: 'Get a random quotes',
@@ -6,33 +6,32 @@ module.exports = {
     isWithArgs: false,
     content: async () => {
         const num = [0, 1, 2, 3]
-    rand = Math.round(Math.random() * (num.length - 1));
-    try {
-        switch (rand) {
-            case 0:
-                return (await axios.get('http://api.icndb.com/jokes/random/')).data.value.joke;
-                break;
-            case 1:
-                return (await axios.get('https://geek-jokes.sameerkumar.website/api')).data;
-                break;
-            case 2:
-                return (await axios.get('https://api.tronalddump.io/random/quote')).data.value;
-                break;
-            case 3:
-                var quoteData = (await axios.get('https://api.quotable.io/random')).data;
-                return quoteData.content + ' - ' + quoteData.author;
-                break;
-            case 3:
-                return (await axios.get('https://api.quotable.io/random')).data.value;
-                break;
-            default:
-                return (await axios.get('http://api.icndb.com/jokes/random/')).data.value.joke;
-                break;
-        }
+        rand = Math.round(Math.random() * (num.length - 1));
+        try {
+            switch (rand) {
+                case 0:
+                    return await getQuotes0();
+                    break;
+                case 1:
+                    return await getQuotes1();
+                    break;
+                case 2:
+                    return await getQuotes2();
+                    break;
+                case 3:
+                    return await getQuotes3();
+                    break;
+                case 4:
+                    return await getQuotes4();
+                    break;
+                default:
+                    return await getQuotes0();
+                    break;
+            }
 
-    } catch (error) {
-        console.log(error);
-        return (error)
-    }
+        } catch (error) {
+            console.log(error);
+            return (error)
+        }
     }
 }
