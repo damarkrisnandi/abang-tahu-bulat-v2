@@ -2,13 +2,14 @@ require("dotenv").config()
 const config = require('./config.json');
 const Discord = require("discord.js");
 const { generateImage, generateTextEmbed } = require("./utils/comps");
-const { commands } = require("./utils/register-commands");
+const { commands } = require("./register-commands");
 const { ONLINE, MAINTENANCE } = require("./utils/status");
+const axios = require('axios');
 
 const bot = new Discord.Client();
 
 // -- bot setting
-const status = MAINTENANCE;
+const status = ONLINE;
 // -- end of bot setting
 
 bot.on("ready", async () => {
@@ -51,24 +52,30 @@ async function command(message) {
         [msgPref, cmmd, args] = split_command;
     }
     
-    if ( 
-        msgPref == prefix && cmmd && 
-        commands().map(item => item.name) && 
-        commands()[commands().map(item => item.name).indexOf(cmmd)]
-    ) {
-        if (status.isMaintenance && message.author.id != config.authorID && message.author.id != config.botID ) {
-            message.channel.send(generateTextEmbed('MAS BAMBANG', 'Sedang maintenis, kamu bukan author'));
-            return;
-        }
+    const commands2 = await commands();
+    if (msgPref != prefix) return;
+    if (!commands2.map(item => item.name)) return;
+    if (!cmmd || !commands2[commands2.map(item => item.name).indexOf(cmmd)]) return;
+    if (status.isMaintenance && message.author.id != config.authorID && message.author.id != config.botID ) {
+        message.channel.send(generateTextEmbed('MAS BAMBANG', 'Sedang maintenis, kamu bukan author'));
+        return;
+    }
 
-        const selected = commands()[commands().map(item => item.name).indexOf(cmmd)];
+    const selected = commands2[commands2.map(item => item.name).indexOf(cmmd)];   
+    const data = selected.isWithArgs ? await selected.content(args) : await selected.content();
+
+    const types = { 
+        image: () => message.channel.send(generateImage(data.url, 'MAS BAMBANG', data.title)),
+        textEmbed: () => message.channel.send(generateTextEmbed('MAS BAMBANG', data)),
+        text: () => message.reply(data),
+        react: () => message.react(data),
+        directMessage: () => message.author.send(data)
+    }
+
+    try {
+        types[selected.type]()    
+    } catch (error) {
         
-        const data = selected.isWithArgs ? await selected.content(args) : await selected.content();
-
-        if (selected.type == 'image') message.channel.send(generateImage(data.url, 'MAS BAMBANG', data.title));
-        else if (selected.type == 'textEmbed') message.channel.send(generateTextEmbed('MAS BAMBANG', data));
-        else if (selected.type == 'text') message.reply(data);
-        else if (selected.type == 'react') message.react(data);
     }
 }
 

@@ -11,9 +11,8 @@ module.exports = {
         '``quote`` untuk minta quote \n' +
         '``react`` untuk minta react pada pesanmu \n' +
         '``kbbi <istilah>`` untuk minta penjelasan istilah dari KBBI \n' +
-        '\n'
-        'Suwun Slur \n' +
-        'NB: update selanjutnya setiap petunjuk yang ada di command help akan ditambah dengan tanggal rilis'
+        '\n' +
+        'Suwun Slur \n'
         return message;
     }
 }
